@@ -1,24 +1,38 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { atom, useRecoilState, selector, useRecoilValue } from 'recoil';
+
+const counterState = atom({
+  key: "counterState",
+  default: 0
+})
+
+const x2Selector = selector({
+  key: "x2Selector",
+  get: ({get}) => {
+    const count = get(counterState)
+
+    return count * 2;
+  }
+})
 
 function App() {
+  const [count, setCount] = useRecoilState(counterState)
+  const doubleCount = useRecoilValue(x2Selector)
+
+  const increment = () => {
+    setCount(count + 1)
+  }
+
+  const decrement = () => {
+    setCount(count - 1)
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <p>Count: {count}</p>
+      <p>Double Count: {doubleCount}</p>
+      <button onClick={increment}>Increment</button>
+      <button onClick={decrement}>Decrement</button>
     </div>
   );
 }
